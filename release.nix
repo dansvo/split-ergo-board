@@ -1,5 +1,5 @@
 let
-  pkgs = import <nixpkgs> { };
+  pkgs = import <nixpkgs> { config = {allowBroken = true;}; };
   stdenv = pkgs.stdenv;
   split_ergo_board = pkgs.haskellPackages.callPackage ./split-ergo-board.nix { };
 

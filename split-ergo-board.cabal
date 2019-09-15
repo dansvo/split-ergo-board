@@ -6,6 +6,5 @@ cabal-version: >= 1.18
 build-type: Simple
 
 executable split_ergo_board
-    build-depends: base < 5, implicit
-    main-is: Main.hs
+    build-depends: base, HUnit, QuickCheck, OpenSCAD
     default-language: Haskell2010
