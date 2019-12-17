@@ -1,11 +1,10 @@
-{ mkDerivation, base, OpenSCAD, stdenv }:
-
+{ mkDerivation, base, HUnit, OpenSCAD, QuickCheck, stdenv }:
 mkDerivation {
-  pname = "split_ergo_board";
+  pname = "split-ergo-board";
   version = "1.0.0";
   src = ./.;
   isLibrary = false;
   isExecutable = true;
-  executableHaskellDepends = [ base OpenSCAD ];
+  executableHaskellDepends = [ base HUnit OpenSCAD QuickCheck ];
   license = stdenv.lib.licenses.bsd3;
 }

@@ -1,7 +1,31 @@
 let
   pkgs = import <nixpkgs> { config = {allowBroken = true;}; };
   stdenv = pkgs.stdenv;
-  split_ergo_board = pkgs.haskellPackages.callPackage ./split-ergo-board.nix { };
+  split_ergo_board =
+    let
+      config = {
+        allowBroken = true;
+
+        packageOverrides = pkgs: rec {
+          haskellPackages = pkgs.haskellPackages.override {
+            overrides = haskellPackagesNew: haskellPackagesOld: rec {
+              split_ergo_board =
+                haskellPackagesNew.callPackage ./split-ergo-board.nix { };
+              OpenSCAD =
+                haskellPackagesNew.callPackage ./OpenSCAD.nix { };
+              QuickCheck =
+                haskellPackagesNew.callPackage ./QuickCheck.nix { };
+              base =
+                haskellPackagesNew.callPackage ./base.nix { };
+            };
+          };
+        };
+      };
+
+      pkgs = import <nixpkgs> { inherit config; };
+
+in
+  pkgs.haskellPackages.split_ergo_board;
 
 in
   {

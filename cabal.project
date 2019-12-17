@@ -1,0 +1,6 @@
+packages: .
+
+source-repository-package
+    type: git
+    location: https://github.com/dansvo/OpenSCAD.git
+    tag: 84052596f0bf7ed23a897fb52cdf7e28d61b239b
