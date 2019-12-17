@@ -96,36 +96,36 @@ clusterFlange cluster = difference
         locs = addresses cluster
         locate = locationFunction cluster
         upperFlanges = union
-            [ locate (x,y) (hull [KeyPlate.ulFlangePost, KeyPlate.urFlangePost])
-            | (x, y) <- topmostKeys cluster ]
+            [ locate address (hull [KeyPlate.ulFlangePost, KeyPlate.urFlangePost])
+            | address <- topmostKeys cluster ]
         lowerFlanges = union
-            [ locate (x,y) (hull [KeyPlate.llFlangePost, KeyPlate.lrFlangePost])
-            | (x, y) <- bottommostKeys cluster ]
+            [ locate address (hull [KeyPlate.llFlangePost, KeyPlate.lrFlangePost])
+            | address <- bottommostKeys cluster ]
         leftFlanges = union
-            [ locate (x,y) (hull [KeyPlate.ulFlangePost, KeyPlate.llFlangePost])
-            | (x, y) <- leftmostKeys cluster ]
+            [ locate address (hull [KeyPlate.ulFlangePost, KeyPlate.llFlangePost])
+            | address <- leftmostKeys cluster ]
         rightFlanges = union
-            [ locate (x,y) (hull [KeyPlate.lrFlangePost, KeyPlate.urFlangePost])
-            | (x, y) <- rightmostKeys cluster ]
+            [ locate address (hull [KeyPlate.lrFlangePost, KeyPlate.urFlangePost])
+            | address <- rightmostKeys cluster ]
         upperWebs = union  
-            [ hull [(locate (x,y) KeyPlate.urFlangePost), (locate (x+1,y) KeyPlate.ulFlangePost) ] 
-            | (x, y) <- Set.toList locs
-            , ((x+1, y) `elem` locs) && (((x,y+1) `notElem` locs) || ((x+1,y+1) `notElem` locs))
+            [ hull [(locate address KeyPlate.urFlangePost), (locate (addressRightOf address) KeyPlate.ulFlangePost) ] 
+            | address <- Set.toList locs
+            , ((addressRightOf address) `elem` locs) && (((addressAbove address) `notElem` locs) || (((addressAbove . addressRightOf) address) `notElem` locs))
             ]
         lowerWebs = union  
-            [ hull [(locate (x,y) KeyPlate.lrFlangePost), (locate (x+1,y) KeyPlate.llFlangePost) ] 
-            | (x, y) <- Set.toList locs
-            , ((x+1, y) `elem` locs) && (((x,y-1) `notElem` locs) || ((x+1,y-1) `notElem` locs))
+            [ hull [(locate address KeyPlate.lrFlangePost), (locate (addressRightOf address) KeyPlate.llFlangePost) ] 
+            | address <- Set.toList locs
+            , ((addressRightOf address) `elem` locs) && (((addressBelow address) `notElem` locs) || (((addressRightOf . addressBelow) address) `notElem` locs))
             ]
         leftWebs = union  
-            [ hull [(locate (x,y) KeyPlate.ulFlangePost), (locate (x,y+1) KeyPlate.llFlangePost) ] 
-            | (x, y) <- Set.toList locs
-            , ((x, y+1) `elem` locs) && (((x-1,y) `notElem` locs) || ((x-1,y+1) `notElem` locs))
+            [ hull [(locate address KeyPlate.ulFlangePost), (locate (addressAbove address) KeyPlate.llFlangePost) ] 
+            | address <- Set.toList locs
+            , ((addressAbove address) `elem` locs) && (((addressLeftOf address) `notElem` locs) || (((addressLeftOf . addressAbove) address) `notElem` locs))
             ]
         rightWebs = union  
-            [ hull [(locate (x,y) KeyPlate.urFlangePost), (locate (x,y+1) KeyPlate.lrFlangePost) ] 
-            | (x, y) <- Set.toList locs
-            , ((x, y+1) `elem` locs) && (((x+1,y) `notElem` locs) || ((x+1,y+1) `notElem` locs))
+            [ hull [(locate address KeyPlate.urFlangePost), (locate (addressAbove address) KeyPlate.lrFlangePost) ] 
+            | address <- Set.toList locs
+            , ((addressAbove address) `elem` locs) && (((addressRightOf address) `notElem` locs) || (((addressAbove . addressRightOf) address) `notElem` locs))
             ]
 
 topmostKeys :: KeyCluster -> [KeyAddress]
@@ -183,31 +183,31 @@ clusterWalls cluster = difference
             [ translate (0,0,-100) (cylinder 1 100 (fn 40))
             , sphere 1 (fn 40)]
         upperWalls = union
-            [ minkowski [longPin, (locate (x,y) (hull [KeyPlate.ulPin, KeyPlate.urPin]))]
-            | (x, y) <- topmostKeys cluster ]
+            [ minkowski [longPin, (locate address (hull [KeyPlate.ulPin, KeyPlate.urPin]))]
+            | address <- topmostKeys cluster ]
         lowerWalls = union
-            [ minkowski [longPin, (locate (x,y) (hull [KeyPlate.llPin, KeyPlate.lrPin]))]
-            | (x, y) <- bottommostKeys cluster ]
+            [ minkowski [longPin, (locate address (hull [KeyPlate.llPin, KeyPlate.lrPin]))]
+            | address <- bottommostKeys cluster ]
         leftWalls = union
-            [ minkowski [longPin, (locate (x,y) (hull [KeyPlate.ulPin, KeyPlate.llPin]))]
-            | (x, y) <- leftmostKeys cluster ]
+            [ minkowski [longPin, (locate address (hull [KeyPlate.ulPin, KeyPlate.llPin]))]
+            | address <- leftmostKeys cluster ]
         rightWalls = union
-            [ minkowski [longPin, (locate (x,y) (hull [KeyPlate.urPin, KeyPlate.lrPin]))]
-            | (x, y) <- rightmostKeys cluster ]
+            [ minkowski [longPin, (locate address (hull [KeyPlate.urPin, KeyPlate.lrPin]))]
+            | address <- rightmostKeys cluster ]
         upperWebWalls = union  
-            [ minkowski [longPin, hull [(locate (x,y) KeyPlate.urPin), (locate (x+1,y) KeyPlate.ulPin) ]]
-            | (x, y) <- Set.toList locs
-            , ((x+1, y) `elem` locs) && (((x,y+1) `notElem` locs) || ((x+1,y+1) `notElem` locs))
+            [ minkowski [longPin, hull [(locate address KeyPlate.urPin), (locate (addressRightOf address) KeyPlate.ulPin) ]]
+            | address <- Set.toList locs
+            , ((addressRightOf address) `elem` locs) && (((addressAbove address) `notElem` locs) || (((addressAbove . addressRightOf) address) `notElem` locs))
             ]
         lowerWebWalls = union  
-            [ minkowski [longPin, hull [(locate (x,y) KeyPlate.lrPin), (locate (x+1,y) KeyPlate.llPin) ]]
-            | (x, y) <- Set.toList locs
-            , ((x+1, y) `elem` locs) && (((x,y-1) `notElem` locs) || ((x+1,y-1) `notElem` locs))
+            [ minkowski [longPin, hull [(locate address KeyPlate.lrPin), (locate (addressRightOf address) KeyPlate.llPin) ]]
+            | address <- Set.toList locs
+            , ((addressRightOf address) `elem` locs) && (((addressBelow address) `notElem` locs) || (((addressRightOf . addressBelow) address) `notElem` locs))
             ]
         leftWebWalls = union  
-            [ minkowski [longPin, hull [(locate (x,y) KeyPlate.ulPin), (locate (x,y+1) KeyPlate.llPin) ]]
-            | (x, y) <- Set.toList locs
-            , ((x, y+1) `elem` locs) && (((x-1,y) `notElem` locs) || ((x-1,y+1) `notElem` locs))
+            [ minkowski [longPin, hull [(locate address KeyPlate.ulPin), (locate (addressAbove address) KeyPlate.llPin) ]]
+            | address <- Set.toList locs
+            , ((addressAbove address) `elem` locs) && (((addressLeftOf address) `notElem` locs) || (((addressAbove .addressLeftOf) address) `notElem` locs))
             ]
         rightWebWalls = union
             [ minkowski [longPin, hull [(locate address KeyPlate.urPin), (locate (addressAbove address) KeyPlate.lrPin) ]]
