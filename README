@@ -1,0 +1,2 @@
+$ nix-shell -p binutils-unwrapped
+$ cabal v2-build
