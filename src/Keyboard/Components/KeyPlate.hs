@@ -4,10 +4,14 @@ module Keyboard.Components.KeyPlate
 , lrFlangePost
 , llFlangePost
 , ulFlangePost
-, urPost
-, lrPost
-, llPost
-, ulPost
+, urShortPost
+, lrShortPost
+, llShortPost
+, ulShortPost
+, urTallPost
+, lrTallPost
+, llTallPost
+, ulTallPost
 , urPin
 , lrPin
 , llPin
@@ -32,19 +36,26 @@ model = difference
 urFlangePost :: Model3d
 urFlangePost = translate (9.5, 9, -keyplateDepth) $
     union
-    [ cylinder 1 6 (fn 40)
-    , translate (0,0,6) (sphere 1 (fn 40))
+    [ cylinder 1 6 (fn 20)
+    , translate (0,0,6) (sphere 1 (fn 20))
     ]
 ulFlangePost = mirror (1,0,0) urFlangePost
 llFlangePost = rotate (0,0,180) urFlangePost
 lrFlangePost = mirror (1,0,0) llFlangePost
 
-urPost :: Model3d
-urPost = translate (9.5 - tinyDistance, 9 - tinyDistance, -keyplateDepth) $
+urShortPost :: Model3d
+urShortPost = translate (9.5 - tinyDistance, 9 - tinyDistance, -keyplateDepth) $
     box tinyDistance tinyDistance keyplateDepth
-ulPost = mirror (1,0,0) urPost
-llPost = rotate (0,0,180) urPost
-lrPost = mirror (1,0,0) llPost
+ulShortPost = mirror (1,0,0) urShortPost
+llShortPost = rotate (0,0,180) urShortPost
+lrShortPost = mirror (1,0,0) llShortPost
+
+urTallPost :: Model3d
+urTallPost = translate (9.5 - tinyDistance, 9 - tinyDistance, -keyplateDepth) $
+    box tinyDistance tinyDistance keyplateDepth
+ulTallPost = mirror (1,0,0) urTallPost
+llTallPost = rotate (0,0,180) urTallPost
+lrTallPost = mirror (1,0,0) llTallPost
 
 urPin :: Model3d
 urPin = translate (9.5, 9, -keyplateDepth) $
